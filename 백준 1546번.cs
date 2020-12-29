@@ -21,7 +21,7 @@ namespace 백준_1546번
             Array.Sort(arr);
             for(int i=0;i<N;i++)
             {
-                arr[i] = (arr[i] *100) /70;
+                arr[i] = (arr[i] /arr[N-1]) *100;
             }
             double sum = 0;
             for(int i=0;i<N;i++)
