@@ -15,19 +15,15 @@ namespace 백준_2869번
             int B = int.Parse(s[1]);
             int V = int.Parse(s[2]);
             int count = 0;
-            while(true)
+            int gar = (V-A) % (A - B);
+            if(gar==0)
             {
-                if(V-A>0)
-                {
-                    V = V - A + B;
-                    count++;
-                }
-                else
-                {
-                    break;
-                }
+                Console.Write((V - A) / (A - B) + 1);
             }
-            Console.WriteLine(count+1);
+            else
+            {
+                Console.Write((V - A) / (A - B) + 2);
+            }
                 
         }
     }
