@@ -2,8 +2,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class 백준_15665번 {
-	public static int[] arr=new int[7];
-	public static int[] visited=new int[7];//방문했으면 1, 아니면 0
+	public static int[] arr=new int[8];
+	public static int[] visited=new int[8];//방문했으면 1, 아니면 0
 	public static StringBuilder sb=new StringBuilder();
 	public static void dfs(int N,int M,int count,int[] arr_temp)
 	{
@@ -17,6 +17,8 @@ public class 백준_15665번 {
 			return;
 		}
 		int before=-1;//중복 방지를 위한 변수 선언
+		if(count==0)
+		{
 			for(int i=0;i<N;i++)
 			{		
 		       	if(visited[i]!=1&&(i==0||before!=arr_temp[i]))
@@ -26,6 +28,23 @@ public class 백준_15665번 {
 			           	dfs(N,M,count+1,arr_temp);        	            					
 	     	        }
 		    }
+		}
+		else
+		{
+			for(int i=0;i<N;i++)
+			{		
+		       	if(visited[i]!=1&&(i==0||before!=arr_temp[i]))
+		       	   	{		    		 
+		       		    if(arr_temp[i]>=arr[count-1])
+		       		    {
+		       		    	before=arr_temp[i];
+		       			   arr[count]=arr_temp[i];	
+			           	   dfs(N,M,count+1,arr_temp);
+		       		    }
+	     	        }
+		    }
+		}
+			
 	}
 			
 	public static void main(String[] args) {
