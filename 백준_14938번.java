@@ -29,20 +29,23 @@ public class น้มุ_14938น๘ {
 		int[] dis=new int[n+1];
 		Arrays.fill(dis, Integer.MAX_VALUE);
 		dis[start]=0;
-		visited[start]=true;
 		q.add(new Node(start,0));
 		int count=0;
 		while(!q.isEmpty())
 		{
 			Node temp=q.poll();
 			int v=temp.x;
+			if(visited[v])
+			{
+				continue;
+			}
+			visited[v]=true;
 			int w=temp.weight;
 			for(int i=0;i<map[v].size();i++)
 			{
 				int nx=map[v].get(i).x;
-				if(!visited[nx]&&dis[nx]>map[v].get(i).weight+w)
-				{
-					visited[nx]=true;
+				if(dis[nx]>map[v].get(i).weight+w)
+				{		
 					dis[nx]=map[v].get(i).weight+w;
 					q.add(new Node(nx,dis[nx]));
 				}
