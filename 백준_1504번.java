@@ -119,10 +119,10 @@ public class 백준_1504번 {
 		long route1=(long)(route1_1+route1_2+between);
 		long route2=(long)(route2_1+route2_2+between);
 		//long으로 바꾼것은 Integer.MAX_VALUE가 들어가 있으면 Int형을 넘어서 그렇다.
-		if(route1>=1000000&&route2>=1000000)
+		if(route1>=100000000&&route2>=100000000)
 		{
 			System.out.println("-1");
-		}//왜 하필100만으로 설정햇는가? 정점 간 거리는 1000이 최대고 정점은 최대 800개. 정점 간 최단거리는 무조건 80만 이하다
+		}//왜 하필1억으로 설정햇는가?1억은 못넘는다 무슨일이 있어도
 		else
 		{
 			System.out.println(Math.min(route1, route2));
