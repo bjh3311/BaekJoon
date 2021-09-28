@@ -6,6 +6,7 @@ public class 합병정렬 {
 	public static void main(String[] args) throws IOException{
 		// TODO Auto-generated method stub
 		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(System.out));
 		int N=Integer.parseInt(br.readLine());
 		int[] arr=new int[N];
 		for(int i=0;i<N;i++)
@@ -15,8 +16,11 @@ public class 합병정렬 {
 		merge_sort(arr);
 		for(int i=0;i<N;i++)
 		{
-			System.out.println(arr[i]);
+			bw.write(arr[i]+"\n");
 		}
+		bw.flush();
+		bw.close();
+		
 	}
 	private static int[] sorted;
 	
