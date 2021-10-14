@@ -25,7 +25,7 @@ public class 백준_1717번 {
 				Union(a,b);
 			}
 			else
-			{
+			{	
 				if(findParent(a)==findParent(b))
 				{
 					bw.write("YES\n");
@@ -45,18 +45,14 @@ public class 백준_1717번 {
 	{
 		int x=findParent(a);
 		int y=findParent(b);
-		if(x!=y)
+		if(x<y)
 		{
-			if(x<y)
-			{
-				parent[y]=x;
-			}
-			else
-			{
-				parent[x]=y;
-			}
+			parent[y]=x;
 		}
-		
+		else
+		{
+			parent[x]=y;
+		}	
 	}
 	public static int findParent(int a)
 	{
@@ -64,6 +60,6 @@ public class 백준_1717번 {
 		{
 			return a;
 		}
-		return a=findParent(parent[a]);
+		return parent[a]=findParent(parent[a]);
 	}
 }
