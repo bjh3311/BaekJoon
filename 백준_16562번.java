@@ -42,16 +42,16 @@ public class น้มุ_16562น๘ {
 			int w=Integer.parseInt(s[1]);
 			Union(v,w);
 		}
+		for(int i=1;i<=N;i++)
+		{
+			int a=Find(i);
+		}
 		visited=new boolean[N+1];
 		int count=0;
 		Queue<Cost> q=new LinkedList<Cost>();
 		for(Cost temp:arr)
 		{
 			q.add(temp);
-		}
-		for(int temp: parent)
-		{
-			System.out.print(temp+" ");
 		}
 		while(!q.isEmpty())
 		{
