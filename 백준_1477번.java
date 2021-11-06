@@ -6,9 +6,9 @@ public class 백준_1477번 {
 		// TODO Auto-generated method stub
 		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 		String[] s=br.readLine().split(" ");
-		int N=Integer.parseInt(s[0]);
-		int M=Integer.parseInt(s[1]);
-		int L=Integer.parseInt(s[2]);
+		int N=Integer.parseInt(s[0]);//휴개소 게수
+		int M=Integer.parseInt(s[1]);//더 세우려는 휴게소 개수
+		int L=Integer.parseInt(s[2]);//고속도로의 길이
 		int[] arr=new int[N+2];
 		arr[0]=0;
 		arr[N+1]=L;
