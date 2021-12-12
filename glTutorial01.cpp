@@ -28,23 +28,35 @@ glm::mat4 Model;
 glm::mat4 mvp;
 
 float angle;
-
-
+float rad;
+float viewDis;
 std::vector<glm::vec3> vertices;
 void timer(int value)
 {
 	angle = angle + glm::radians(5.0f);//호출될때마다 angle이 5.0라디안만큼 더해짐
+	rad = rad + 0.04f;
+	viewDis = viewDis + 0.0005f;
 	glutPostRedisplay();
 	glutTimerFunc(20, timer, 0);
 	//20ms마다 자기자신 다시 호출
-}
+}//20ms마다 5도씩 회전
 void transform()
 {
+
+	
+
 	Model = glm::mat4(1.0f);// Model matrix : an identity matrix (model will be at the origin)
 							//4X4 Identity matrix
 	Model = glm::rotate(Model, angle, glm::vec3(0, 1, 0));
-	//회전축은 0,1,0. 즉, y축 회전이다
+	Model = glm::translate(Model, glm::vec3(rad, 0, 0));
+	Model = glm::rotate(Model, angle, glm::vec3(0, 1, 0));
 
+	View = glm::translate(View, glm::vec3(0, -viewDis, -viewDis));
+
+	
+	
+	//회전축은 0,1,0. 즉, y축 회전이다.
+	
 	mvp = Projection * View*Model;
 	//homogeneous maxtrix를 이용해 하나의 matrix로 만들어낸다
 	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
@@ -223,7 +235,7 @@ void myreshape(int w, int h) {
 	//Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f);
 	//4x4 matrix를 만들어준다
 	View = glm::lookAt(
-		glm::vec3(3, 4, 10), // Camera is at (0,0,3), in World Space
+		glm::vec3(0, 5, 5), // Camera is at (3,0,3), in World Space
 		glm::vec3(0, 0, 0), // and looks at the origin
 		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
 	);//viewing transformation을 해준다
