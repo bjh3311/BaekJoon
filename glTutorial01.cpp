@@ -97,7 +97,7 @@ void init()
 	}//¸ðµç»ö±òÀ» ÇÏ¾á»öÀ¸·Î
 	glGenBuffers(1, &ColorBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, ColorBufferID);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(glm::vec3), &colors[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(glm::vec3), &colors[0], GL_STATIC_DRAW);
 
 	auto getNormal = [](const glm::vec3& point1, const glm::vec3& point2, const glm::vec3& point3)
 	{
@@ -108,9 +108,9 @@ void init()
 	vector<glm::vec3> normals;
 	for (int i = 0; i < vertices.size(); i = i + 3)
 	{
-		getNormal(vertices[i], vertices[i + 1], vertices[i + 2]);
-		getNormal(vertices[i], vertices[i + 1], vertices[i + 2]);
-		getNormal(vertices[i], vertices[i + 1], vertices[i + 2]);
+		normals.push_back(getNormal(vertices[i], vertices[i + 1], vertices[i + 2]));
+		normals.push_back(getNormal(vertices[i], vertices[i + 1], vertices[i + 2]));
+		normals.push_back(getNormal(vertices[i], vertices[i + 1], vertices[i + 2]));
 	}
 	glGenBuffers(1, &NormalBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, NormalBufferID);
