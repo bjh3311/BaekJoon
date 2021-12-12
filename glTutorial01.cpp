@@ -24,9 +24,10 @@ float angle;
 
 void timer(int value)
 {
-	angle = angle + glm::radians(5.0f);
+	angle = angle + glm::radians(5.0f);//호출될때마다 angle이 5.0라디안만큼 더해짐
 	glutPostRedisplay();
 	glutTimerFunc(20, timer, 0);
+	//20ms마다 자기자신 다시 호출
 }
 void transform()
 {
@@ -67,6 +68,11 @@ void init()
 	glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 	programID = LoadShaders("simple.vshader", "simple.fshader");
 	glUseProgram(programID);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 }
 
 GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
@@ -162,7 +168,7 @@ void myreshape(int w, int h) {
 	//Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f);
 	//4x4 matrix를 만들어준다
 	View = glm::lookAt(
-		glm::vec3(0, 0, 15), // Camera is at (0,0,3), in World Space
+		glm::vec3(3, 4, 3), // Camera is at (0,0,3), in World Space
 		glm::vec3(0, 0, 0), // and looks at the origin
 		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
 	);//viewing transformation을 해준다
@@ -212,9 +218,6 @@ bool loadOBJ(const char* path, std::vector<glm::vec3>& vertices)
 		vertices.push_back(vertex);
 	}
 }
-
-
-
 int main(int argc, char** argv)
 {
 	cout << "어떤 오브젝트를 구현하고싶나요?? " << endl;
