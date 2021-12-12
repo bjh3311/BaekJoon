@@ -11,9 +11,16 @@ using namespace std;
 
 GLuint VertexBufferID;
 GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path);
+
 GLuint programID;
+GLuint NormalBufferID;
+
+GLuint ColorBufferID;
 
 GLuint MatrixID;
+GLuint ViewMatrixID;
+GLuint ModelMatrixID;
+GLuint LightID;
 
 glm::mat4 Projection;
 glm::mat4 View;
@@ -22,6 +29,8 @@ glm::mat4 mvp;
 
 float angle;
 
+
+std::vector<glm::vec3> vertices;
 void timer(int value)
 {
 	angle = angle + glm::radians(5.0f);//호출될때마다 angle이 5.0라디안만큼 더해짐
@@ -39,9 +48,13 @@ void transform()
 	mvp = Projection * View*Model;
 	//homogeneous maxtrix를 이용해 하나의 matrix로 만들어낸다
 	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+	glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &View[0][0]);
+	glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &Model[0][0]);
+	glm::vec3 lightPos = glm::vec3(10, 10, 10);
+	glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
+
 }
 
-std::vector<glm::vec3> vertices;
 void mydisplay() {
 	transform();
 
@@ -49,7 +62,17 @@ void mydisplay() {
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);//vertex 정보
+
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, ColorBufferID);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);//색깔 정보
+
+
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, NormalBufferID);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);//Light 정보
+
 
 	glDrawArrays(GL_TRIANGLES, 0, 3*vertices.size()*sizeof(glm::vec3));
 	// Starting from vertex 0; 3 vertices -> 1 triangle
@@ -58,7 +81,7 @@ void mydisplay() {
 }
 void init()
 {
-	MatrixID = glGetUniformLocation(programID, "MVP");
+	
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -66,7 +89,39 @@ void init()
 	glGenBuffers(1, &VertexBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+
+	vector<glm::vec3> colors;
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+	}//모든색깔을 하얀색으로
+	glGenBuffers(1, &ColorBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, ColorBufferID);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(glm::vec3), &colors[0], GL_STATIC_DRAW);
+
+	auto getNormal = [](const glm::vec3& point1, const glm::vec3& point2, const glm::vec3& point3)
+	{
+		glm::vec3 edge1 = point2 - point1;
+		glm::vec3 edge2 = point3 - point2;
+		return glm::normalize(glm::cross(edge1, edge2));
+	};
+	vector<glm::vec3> normals;
+	for (int i = 0; i < vertices.size(); i = i + 3)
+	{
+		getNormal(vertices[i], vertices[i + 1], vertices[i + 2]);
+		getNormal(vertices[i], vertices[i + 1], vertices[i + 2]);
+		getNormal(vertices[i], vertices[i + 1], vertices[i + 2]);
+	}
+	glGenBuffers(1, &NormalBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, NormalBufferID);
+	glBufferData(GL_ARRAY_BUFFER, normals.size()*sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+
+
 	programID = LoadShaders("simple.vshader", "simple.fshader");
+	MatrixID = glGetUniformLocation(programID, "MVP");
+	ViewMatrixID = glGetUniformLocation(programID, "V");
+	ModelMatrixID = glGetUniformLocation(programID, "M");
+	LightID = glGetUniformLocation(programID, "LightPosition");
 	glUseProgram(programID);
 
 	glEnable(GL_DEPTH_TEST);
@@ -168,7 +223,7 @@ void myreshape(int w, int h) {
 	//Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f);
 	//4x4 matrix를 만들어준다
 	View = glm::lookAt(
-		glm::vec3(3, 4, 3), // Camera is at (0,0,3), in World Space
+		glm::vec3(3, 4, 10), // Camera is at (0,0,3), in World Space
 		glm::vec3(0, 0, 0), // and looks at the origin
 		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
 	);//viewing transformation을 해준다
