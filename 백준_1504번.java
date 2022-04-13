@@ -17,7 +17,7 @@ class Node implements Comparable<Node>
 	}//우선순위 큐에 넣을때 간선이 짧은게 가장 큰 우선순위를 갖도록 구현
 }
 public class 백준_1504번 {
-
+	public static int INF=200000000;
 	public static void main(String[] args) throws IOException{
 		// TODO Auto-generated method stub
 		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
@@ -43,7 +43,8 @@ public class 백준_1504번 {
 		int des2=Integer.parseInt(s[1]);//지나야 되는 두 정점중 두번째
 		boolean[] visited=new boolean[N+1];
 		int[] dis=new int[N+1];
-		Arrays.fill(dis, Integer.MAX_VALUE);
+		Arrays.fill(dis, INF);
+		Arrays.fill(visited, false);
 		dis[1]=0;
 		PriorityQueue<Node> q=new PriorityQueue<Node>();
 		q.add(new Node(1,0));//시작점 1에서부터 시작
@@ -68,7 +69,7 @@ public class 백준_1504번 {
 		int route1_1=dis[des1];//지나야되는 두 정점중 시작점에서부터 첫번째 정점까지의 거리
 		int route2_1=dis[des2];//지나야되는 두 정점중 시작점에서부터 두번째 정점까지의 거리
 		Arrays.fill(visited, false);
-		Arrays.fill(dis, Integer.MAX_VALUE);
+		Arrays.fill(dis, INF);
 		q.clear();
 		q.add(new Node(des1,0));//지나야되는 두 정점중 첫번째부터 시작
 		dis[des1]=0;
@@ -93,7 +94,7 @@ public class 백준_1504번 {
 		int between=dis[des2];//지나야 되는 두 정점사이의 거리
 		int route2_2=dis[N];//des1에서 최종 목적지 N까지의 거리
 		Arrays.fill(visited, false);
-		Arrays.fill(dis, Integer.MAX_VALUE);
+		Arrays.fill(dis, INF);
 		q.clear();
 		q.add(new Node(des2,0));
 		dis[des2]=0;
@@ -116,16 +117,9 @@ public class 백준_1504번 {
 			visited[v]=true;
 		}
 		int route1_2=dis[N];//des2에서 최종 목적지 N까지의 거리
-		long route1=(long)(route1_1+route1_2+between);
-		long route2=(long)(route2_1+route2_2+between);
-		//long으로 바꾼것은 Integer.MAX_VALUE가 들어가 있으면 Int형을 넘어서 그렇다.
-		if(route1>=100000000&&route2>=100000000)
-		{
-			System.out.println("-1");
-		}//왜 하필1억으로 설정햇는가?1억은 못넘는다 무슨일이 있어도
-		else
-		{
-			System.out.println(Math.min(route1, route2));
-		}
+		int route1=route1_1+route1_2+between;
+		int route2=route2_1+route2_2+between;
+		int ans=(route1>=INF&&route2>=INF)? -1 : Math.min(route1, route2);
+		System.out.println(ans);
 	}
 }
