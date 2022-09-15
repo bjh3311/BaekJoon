@@ -1,95 +1,63 @@
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
+class Node
+{
+	int loc;//위치
+	int sec;//시간
+	int before;//이전 위치
+	public Node(int loc,int sec,int before)
+	{
+		this.loc=loc;
+		this.sec=sec;
+		this.before=before;
+	}
+}
 public class 백준_13913번 {
 	public static int N;
 	public static int K;
-	public static int[][] arr=new int[100001][2];//arr에는 몇 초를 저장
+	public static int[] arr=new int[100001];//arr에는 몇 초를 저장
 	public static boolean[] visited=new boolean[100001];
-	public static Queue<Integer> q=new LinkedList<Integer>();
 	public static void main(String[] args)throws IOException{
-		// TODO Auto-generated method stub
-        BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(System.out));
-		StringBuilder sb=new StringBuilder();
-		Scanner scan=new Scanner(System.in);
-		N=scan.nextInt();
-		K=scan.nextInt();
-		if(N==K)
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		String[] s=br.readLine().split(" ");
+		N=Integer.parseInt(s[0]);
+		K=Integer.parseInt(s[1]);
+		Queue<Node> q=new LinkedList<Node>();
+		Stack<Integer> stack=new Stack<Integer>();
+		stack.push(K);
+		q.add(new Node(N,0,N));
+		while(!q.isEmpty())
 		{
-			System.out.println(0);
-			System.out.print(K);
-			System.exit(0);
-		}//예외처리
-		if(Math.abs(N-K)==1)
+			Node temp=q.poll();
+			if(temp.loc<0||temp.loc>100000)
+			{
+				continue;
+			}
+			if(temp.loc==K)//도착점에 도착했다면
+			{
+				System.out.println(temp.sec);
+				arr[temp.loc]=temp.before;
+				break;
+			}
+			if(visited[temp.loc])//방문된 적 있다면
+			{
+				continue;
+			}
+			visited[temp.loc]=true;
+			arr[temp.loc]=temp.before;
+			q.add(new Node(temp.loc+1,temp.sec+1,temp.loc));
+			q.add(new Node(temp.loc-1,temp.sec+1,temp.loc));
+			q.add(new Node(temp.loc*2,temp.sec+1,temp.loc));
+		}
+		int index=K;
+		while(index!=N)
 		{
-			if(N<K)
-			{
-				System.out.println(1);
-				System.out.print(N+" "+K);
-			}
-			else
-			{
-				System.out.print(1);
-				System.out.print(K+" "+N);
-			}
-			System.exit(0);
-		}//예외처리
-		q.add(N);
-    	visited[N]=true;
-    	arr[N][0]=0;
-    	while(!q.isEmpty())
-    	{
-    		int temp=q.poll();
-    		if(temp==K)
-    		{
-    			System.out.println(arr[temp][0]);
-    			while(arr[temp][1]!=N)
-    			{
-    				sb.append(arr[temp][1]+" ");
-    				temp=arr[temp][1];//자취 추적
-    			}
-    			String[] s=sb.toString().split(" ");
-    			bw.write(N+" ");//시작부분
-    			for(int i=s.length-1;i>=0;i--)
-    			{
-    				bw.write(s[i]+" ");
-    			}
-    			bw.write(K+"");
-    			bw.flush();
-    			bw.close();
-    			System.exit(0);//프로그램 종료
-    		}
-    		if(temp-1>=0&&temp-1<=100000)
-    		{
-    			if(!visited[temp-1])//처음 방문했을때
-    			{
-    				visited[temp-1]=true;
-        			arr[temp-1][0]=arr[temp][0]+1;
-        			arr[temp-1][1]=temp;
-        			q.add(temp-1);
-    			}			
-    		}
-    		if(temp+1>=0&&temp+1<=100000)
-    		{
-    			if(!visited[temp+1])//처음 방문했을때
-    			{
-    				visited[temp+1]=true;
-        			arr[temp+1][0]=arr[temp][0]+1;
-        			arr[temp+1][1]=temp;
-        			q.add(temp+1);
-    			}			
-    		}
-    		if(2*temp>=0&&2*temp<=100000)
-    		{
-    			if(!visited[temp*2])//처음 방문했을때
-    			{
-    				visited[temp*2]=true;
-        			arr[temp*2][0]=arr[temp][0]+1;
-        			arr[temp*2][1]=temp;
-        			q.add(temp*2);
-    			}
-    		}
-    	}
+			stack.push(arr[index]);
+			index=arr[index];
+		}
+		while(!stack.isEmpty())
+		{
+			System.out.print(stack.pop()+" ");
+		}
 	}
 }
