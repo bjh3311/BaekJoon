@@ -1,40 +1,47 @@
 import java.util.*;
 import java.io.*;
-public class ¹éÁØ_3079¹ø {
 
+public class ë°±ì¤€_3079ë²ˆ {
+
+	public static int n,m;
+	public static int arr[];
+	public static long max = Long.MIN_VALUE;
+	public static long min = Long.MAX_VALUE;
 	public static void main(String[] args) throws IOException{
-		// TODO Auto-generated method stub
-		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-		String[] s=br.readLine().split(" ");
-		int N=Integer.parseInt(s[0]);
-		int M=Integer.parseInt(s[1]);
-		long[] time=new long[N];
-		for(int i=0;i<N;i++)
-		{
-			time[i]=Long.parseLong(br.readLine());
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		arr = new int[n];
+		
+		for(int i=0;i<n;i++) {
+			arr[i] = Integer.parseInt(br.readLine());
 		}
-		Arrays.sort(time);
-		long left=0;
-		long right=M*time[N-1];//°É¸®´Â ½Ã°£ÀÌ °¡Àå ±ä ½É»ç´ë * M¸í
-		long ans=Long.MAX_VALUE;
-		while(left<=right)
-		{
-			long mid=(left+right)/2;
-			long sum=0;
-			for(int i=0;i<N;i++)
-			{
-				sum+=mid/time[i];
+		Arrays.sort(arr);
+		max=arr[n-1];
+		long left = 0;
+		long right = max * m;
+		long mid = 0;
+		while(left<=right) {
+			mid = (right + left) / 2;
+			long sum = 0;
+			for(int i=0;i<n;i++) {
+				sum+=mid/arr[i];
+				if(sum>=m)
+				{
+					break;
+				}
 			}
-			if(sum>=M)
-			{
-				right=mid-1;
-				ans=Math.min(mid, ans);
-			}
-			else
+			if(sum<m) 
 			{
 				left=mid+1;
 			}
+			else {
+				right=mid-1;
+				min=Math.min(min,mid);
+			}
 		}
-		System.out.println(ans);
+		System.out.println(min);
+		
 	}
 }
