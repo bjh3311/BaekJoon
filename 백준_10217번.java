@@ -1,91 +1,66 @@
 import java.util.*;
 import java.io.*;
-class Node implements Comparable<Node>
+class Node 
 {
-	int v;
-	int weight;
-	int price;
-	public Node(int v,int price,int weight)
+	int v;//ì •ì 
+	int c;//ê°€ê²©
+	int d;//ì‹œê°„
+	Node(int v,int c,int d)
 	{
 		this.v=v;
-		this.price=price;
-		this.weight=weight;
-	}
-	public int compareTo(Node o)
-	{
-		return weight-o.weight;
+		this.c=c;
+		this.d=d;
 	}
 }
-public class ¹éÁØ_10217¹ø {
+public class ë°±ì¤€_10217ë²ˆ {
 
+	public static int INF=100001;
 	public static void main(String[] args) throws IOException{
 		// TODO Auto-generated method stub
 		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 		int T=Integer.parseInt(br.readLine());
-		StringBuilder sb=new StringBuilder();
-		while(T>0)
+		String[] s=br.readLine().split(" ");
+		int N=Integer.parseInt(s[0]);
+		int M=Integer.parseInt(s[1]);
+		int K=Integer.parseInt(s[2]);
+		ArrayList<Node>[] arr=new ArrayList[N+1];
+		for(int i=1;i<=N;i++)
 		{
-			T--;
-			String[] s=br.readLine().split(" ");
-			int N=Integer.parseInt(s[0]);
-			int M=Integer.parseInt(s[1]);
-			int K=Integer.parseInt(s[2]);
-			ArrayList<Node>[] arr=new ArrayList[N+1];
-			for(int i=1;i<=N;i++)
+			arr[i]=new ArrayList<Node>();
+		}
+		for(int i=0;i<K;i++)
+		{
+			s=br.readLine().split(" ");
+			int u=Integer.parseInt(s[0]);
+			int v=Integer.parseInt(s[1]);
+			int c=Integer.parseInt(s[2]);//ë¹„ìš©
+			int d=Integer.parseInt(s[3]);//ì‹œê°„
+			arr[u].add(new Node(v,c,d));//ì–‘ë°©í–¥ì´ ì•„ë‹ˆë‹¤
+		}
+		int[][] dis=new int[M+1][N+1];//ì•žì—ëŠ” ë¹„ìš©, ë’¤ì—ëŠ” ë…¸ë“œë²ˆí˜¸, valueëŠ” ì‹œê°„
+		for(int i=0;i<=M;i++)//
+		{
+			Arrays.fill(dis[i], INF);
+		}
+		dis[0][1]=0;//ì‹œìž‘ì ì€ ì´ˆê¸°í™”
+		for(int i=0;i<=M;i++)
+		{
+			for(int j=1;j<=N;j++)
 			{
-				arr[i]=new ArrayList<Node>();
-			}
-			for(int i=0;i<K;i++)
-			{
-				s=br.readLine().split(" ");
-				int u=Integer.parseInt(s[0]);
-				int v=Integer.parseInt(s[1]);
-				int c=Integer.parseInt(s[2]);
-				int d=Integer.parseInt(s[3]);
-				arr[u].add(new Node(v,c,d));
-			}
-			PriorityQueue<Node> q=new PriorityQueue<Node>();
-			q.add(new Node(1,0,0));//½ÃÀÛµµ½Ã´Â 1¹ø
-			int[][] dp=new int[N+1][M+1];//dp[i][j]´Â iÁ¡±îÁö j¿øÀ¸·ÎÀÇ ¶æ
-			for(int i=1;i<=N;i++)
-			{
-				for(int j=0;j<=M;j++)
+				for(Node temp : arr[j])
 				{
-					dp[i][j]=Integer.MAX_VALUE;
-				}
-			}
-			dp[1][0]=0;
-			while(!q.isEmpty())
-			{
-				Node temp=q.poll();
-				int cur=temp.v;
-				for(Node next: arr[cur])
-				{
-					if(temp.price+next.price<=M)//ºñ¿ëÀÌ Çã¶ôÇÏ´Â ÇÑµµ³»¿¡¼­
+					if(i+temp.c<=M)
 					{
-						if(dp[next.v][temp.price+next.price]>temp.weight+next.weight)
-						{
-							dp[next.v][temp.price+next.price]=temp.weight+next.weight;
-							q.add(new Node(next.v,temp.price+next.price,temp.weight+next.weight));
-						}
+						dis[i+temp.c][temp.v]=Math.min(dis[i+temp.c][temp.v], dis[i][j]+temp.d);
 					}
 				}
 			}
-			int min=Integer.MAX_VALUE;
-			for(int i=0;i<=M;i++)
-			{
-				min=Math.min(dp[N][i], min);
-			}
-			if(min==Integer.MAX_VALUE)
-			{
-				sb.append("Poor KCM\n");
-			}
-			else
-			{
-				sb.append(min+"\n");
-			}
 		}
-		System.out.print(sb.toString());
+		int result=INF;
+		for(int i=0;i<=M;i++)
+		{
+			result=Math.min(result, dis[i][N]);
+		}
+		System.out.println(result==INF? "Poor KCM":result);
 	}
-
 }
