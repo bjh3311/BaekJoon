@@ -1,46 +1,49 @@
 import java.util.*;
 import java.io.*;
-public class ¹éÁØ_7579¹ø {
+public class ë°±ì¤€_7579ë²ˆ {
 
 	public static void main(String[] args) throws IOException{
 		// TODO Auto-generated method stub
-		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-		String[] s=br.readLine().split(" ");
-		int N=Integer.parseInt(s[0]);
-		int M=Integer.parseInt(s[1]);
-		int[] mem=new int[N];
-		int[] cost=new int[N];
-		s=br.readLine().split(" ");
-		String[] t=br.readLine().split(" ");
-		int sum=0;
-		for(int i=0;i<N;i++)
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String[] s = br.readLine().split(" ");
+		int N = Integer.parseInt(s[0]);
+		int M = Integer.parseInt(s[1]);
+		int[] arr = new int[N];
+		int[] dis = new int[N];
+		s = br.readLine().split(" ");
+		for(int i = 0; i < N ; i++)
 		{
-			mem[i]=Integer.parseInt(s[i]);
-			cost[i]=Integer.parseInt(t[i]);
-			sum+=cost[i];
+			arr[i] = Integer.parseInt(s[i]);
 		}
-		int[][] dp=new int[N][sum+1];
-		for(int i=0;i<N;i++)//ÃÊ±â°ª ¼³Á¤
-		{	
-			if(cost[i]==0)
+		s = br.readLine().split(" ");
+		for(int i = 0; i < N ; i++)
+		{
+			dis[i]=Integer.parseInt(s[i]);
+		}
+		int[][] dp = new int [N][10001];//ì•žì—ëŠ” ëª‡ê°œ ì„ íƒí–ˆëŠ”ì§€, ë’¤ì—ëŠ” ë¹„ìš©
+		for (int i = 0 ; i<N ;i++)//ì´ˆê¸°ê°’ ì„¤ì •
+		{
+			if(dis[i]==0)
 			{
-				dp[i][0]=mem[i];
+				dp[i][0]=arr[i];
 			}
 		}
-		for(int i=0;i<=sum;i++)
+		for(int i=0;i<=10000;i++)
 		{
-			if(cost[0]<=i)
+			if(dis[0]<=i)
 			{
-				dp[0][i]=mem[0];
+				dp[0][i]=arr[0];
 			}
 		}
-		for(int i=1;i<N;i++)
+		
+		//dp ìƒí–¥ì‹
+		for(int i = 1 ; i<N;i++)
 		{
-			for(int j=1;j<=sum;j++)
+			for(int j=0;j<=10000;j++)
 			{
-				if(cost[i]<=j)
+				if(dis[i]<=j)
 				{
-					dp[i][j]=Math.max(dp[i-1][j], dp[i-1][j-cost[i]]+mem[i]);
+					dp[i][j] = Math.max(dp[i-1][j], dp[i-1][j-dis[i]]+arr[i]);
 				}
 				else
 				{
@@ -48,11 +51,10 @@ public class ¹éÁØ_7579¹ø {
 				}
 			}
 		}
-		int result=Integer.MAX_VALUE;
+		int result = Integer.MAX_VALUE;
 		for(int i=0;i<N;i++)
-		{
-			
-			for(int j=0;j<=sum;j++)
+		{	
+			for(int j=0;j<=10000;j++)
 			{
 				if(dp[i][j]>=M)
 				{
